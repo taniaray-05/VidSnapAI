@@ -1,0 +1,56 @@
+# This file look for new folders inside user uploads and converts them to reel if they are not already converted
+import os
+from text_to_audio import text_to_speech_file
+import time
+import subprocess
+import uuid 
+
+def text_to_audio(folder):
+    print("TTA - ", folder)
+    with open(f"user_uploads/{folder}/desc.txt") as f:
+        text = f.read()
+    print(text, folder)
+    text_to_speech_file(text, folder)
+
+def create_reel(folder):
+    os.makedirs("static/reels", exist_ok=True)
+    input_file = os.path.join("user_uploads", folder, "input.txt")
+    audio_file = os.path.join("user_uploads", folder, "audio.mp3")
+    print("INPUT FILE:", input_file)
+    print("AUDIO FILE:", audio_file)
+    output_file = f"static/reel/reel_{uuid.uuid4().hex}.mp4"
+    print("OUTPUT FILE:", output_file)
+    command = f'''ffmpeg -y -f concat -safe 0 -i "{input_file}" -i "{audio_file}" -vf "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black" -c:v libx264 -c:a aac -ar 44100 -ac 2 -shortest -r 30 -pix_fmt yuv420p "{output_file}"'''
+    print(command)
+    subprocess.run(command, shell=True, check=True)
+
+if __name__ == "__main__":
+   while True:
+       print("Processing queue...")
+       with open("done.txt", "r") as f:
+           done_folders = f.readlines()
+
+       done_folders = [f.strip() for f in done_folders]
+       folders = os.listdir("user_uploads")
+       for folder in folders:
+          if(folder not in done_folders):
+           text_to_audio(folder) # Generate the audio.mp3 from desc.txt
+           create_reel(folder) # Convert the images and audio.mp3 inside the folder to reel
+           with open("done.txt", "a") as f:
+              f.write(folder + "\n")
+
+       time.sleep(4)
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+    
+    

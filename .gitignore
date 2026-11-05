@@ -1,0 +1,14 @@
+# Ignore sensitive configuration
+config.py
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Uploaded user files
+user_uploads/
+
+# Virtual environment
+venv/
+.env
+

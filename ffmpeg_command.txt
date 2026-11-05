@@ -1,0 +1,1 @@
+ffmpeg -y -f concat -safe 0 -i "{input_file}" -i "{audio_file}" -vf "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black" -c:v libx264 -c:a aac -ar 44100 -ac 2 -shortest -r 30 -pix_fmt yuv420p "{output_file}"

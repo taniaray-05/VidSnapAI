@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - AI Reel Generator{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container gallery-container">
+    <h1 class="gallery-title">Reel Gallery</h1>
+    <div class="gallery-grid">
+    
+        {% for reel in reels %}
+        <video width="300" controls preload="metadata">
+            <source src="{{ url_for('static', filename='reel/' + reel) }}"
+                    type="video/mp4">
+                    Your browser does not support the video tag
+        </video>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
